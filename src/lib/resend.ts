@@ -9,7 +9,9 @@ if (!resendApiKey) {
 export const resend = new Resend(resendApiKey);
 
 export const CONTACT_EMAIL_TO = import.meta.env.CONTACT_EMAIL_TO || "heykelprayogi123@gmail.com";
-export const FROM_EMAIL = "Portfolio Contact <noreply@heykel.dev>";
+
+// 💡 PERBAIKAN: Gunakan domain pengujian bawaan Resend ini untuk akun gratis
+export const FROM_EMAIL = "Portfolio Contact <onboarding@resend.dev>";
 
 // Template email notifikasi kontak masuk
 export function buildContactEmailHtml(data: {

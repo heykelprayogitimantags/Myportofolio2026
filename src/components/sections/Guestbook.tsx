@@ -29,7 +29,6 @@ function timeAgo(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 }
 
-// Warna avatar deterministik berdasar nama
 function getAvatarColor(name: string): string {
   const colors = [
     "from-blue-500 to-cyan-400",
@@ -54,6 +53,9 @@ export default function Guestbook() {
   const [isLoading, setIsLoading] = useState(true);
   const formRef = useRef<HTMLFormElement>(null);
 
+  // 💬 MASUKKAN NOMOR WHATSAPP KAMU DI SINI (Gunakan kode negara 62)
+  const NOMOR_WA = "6287822274814";
+
   const fetchEntries = async (showRefresh = false) => {
     if (showRefresh) setIsRefreshing(true);
     try {
@@ -70,7 +72,6 @@ export default function Guestbook() {
 
   useEffect(() => {
     fetchEntries();
-    // Auto-refresh setiap 30 detik
     const interval = setInterval(() => fetchEntries(), 30000);
     return () => clearInterval(interval);
   }, []);
@@ -88,17 +89,16 @@ export default function Guestbook() {
       website: (fd.get("website") as string) || undefined,
     };
 
-    const result = guestbookSchema.safeParse(data);
-    if (!result.success) {
-      const fe: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) fe[err.path[0] as string] = err.message;
-      });
-      setErrors(fe);
-      setFormState("idle");
-      return;
-    }
-
+ const result = guestbookSchema.safeParse(data);
+if (!result.success) {
+  const fe: Record<string, string> = {};
+  result.error.issues.forEach((err) => {
+    if (err.path[0]) fe[err.path[0] as string] = err.message;
+  });
+  setErrors(fe);
+  setFormState("idle");
+  return;
+}
     try {
       const res = await fetch("/api/guestbook", {
         method: "POST",
@@ -109,9 +109,18 @@ export default function Guestbook() {
 
       if (res.ok && json.success) {
         setFormState("success");
-        setServerMsg("Pesan kamu sudah masuk! Terima kasih 🎉");
+        setServerMsg("Pesan masuk! Membuka WhatsApp...");
         formRef.current?.reset();
         setMsgLen(0);
+
+        // 🚀 Otomatis Buka WhatsApp
+        const waText = encodeURIComponent(
+          `Halo Heykel, ada pesan baru di Guestbook Portofolio!\n\n` +
+          `👤 Nama: ${data.name}\n` +
+          `💬 Pesan: ${data.message}`
+        );
+        window.open(`https://wa.me/${NOMOR_WA}?text=${waText}`, "_blank");
+
         setTimeout(() => {
           setFormState("idle");
           setServerMsg("");
@@ -119,11 +128,11 @@ export default function Guestbook() {
         }, 2500);
       } else {
         setFormState("error");
-        setServerMsg(json.message || "Gagal mengirim. Coba lagi.");
+        setServerMsg(json.message || "Gagal mengirim. Periksa database/RLS Supabase.");
       }
-    } catch {
+    } catch (err) {
       setFormState("error");
-      setServerMsg("Koneksi bermasalah.");
+      setServerMsg("Koneksi bermasalah / API Route gagal merespon.");
     }
   };
 

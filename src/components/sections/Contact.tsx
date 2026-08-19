@@ -39,9 +39,9 @@ export default function Contact() {
     const result = contactSchema.safeParse(data);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
-      });
+      result.error.issues.forEach((err) => {
+  if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+});
       setErrors(fieldErrors);
       setState("idle");
       return;
