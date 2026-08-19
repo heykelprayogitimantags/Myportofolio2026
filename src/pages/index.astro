@@ -12,7 +12,7 @@ import Certificates from "../components/sections/Certificates.tsx";
 import Contact from "../components/sections/Contact.tsx";
 import Guestbook from "../components/sections/Guestbook.tsx";
 
-import { supabase } from "../lib/supabase";
+import { supabase } from "../lib/supabase.ts";
 
 // SSR: Fetch projects & certificates dari Supabase saat server render
 let initialProjects: any[] = [];
