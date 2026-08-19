@@ -1,0 +1,248 @@
+---
+// Hero Section — dengan typewriter effect via React island
+---
+
+<section
+  id="home"
+  class="relative min-h-screen flex items-center overflow-hidden"
+>
+  <!-- Animated gradient background -->
+  <div class="absolute inset-0 -z-10">
+    <div
+      class="absolute inset-0 opacity-40 dark:opacity-60"
+      style="background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(59,130,246,0.25), transparent), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139,92,246,0.15), transparent), radial-gradient(ellipse 50% 40% at 10% 90%, rgba(34,197,94,0.1), transparent);"
+    ></div>
+
+    <!-- Grid pattern -->
+    <div
+      class="absolute inset-0 opacity-[0.03] dark:opacity-[0.06]"
+      style="background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px); background-size: 60px 60px;"
+    ></div>
+
+    <!-- Floating orbs -->
+    <div
+      class="absolute top-20 left-10 w-72 h-72 rounded-full opacity-10 dark:opacity-20 blur-3xl"
+      style="background: radial-gradient(circle, #3b82f6, transparent); animation: float 8s ease-in-out infinite;"
+    ></div>
+    <div
+      class="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-10 dark:opacity-15 blur-3xl"
+      style="background: radial-gradient(circle, #8b5cf6, transparent); animation: float 10s ease-in-out infinite reverse;"
+    ></div>
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5 dark:opacity-10 blur-3xl"
+      style="background: radial-gradient(circle, #22c55e, transparent); animation: float 12s ease-in-out infinite;"
+    ></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20 w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left: Text Content -->
+      <div class="text-center lg:text-left">
+        <!-- Available for Work Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)]/80 backdrop-blur-sm text-sm text-[var(--text-secondary)] mb-6 shadow-sm">
+          <span class="available-dot"></span>
+          <span class="font-medium">Available for Work</span>
+        </div>
+
+        <!-- Name -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] mb-4 leading-tight">
+          Hi, I'm <br class="hidden sm:block" />
+          <span
+            class="gradient-text inline-block"
+            style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #22c55e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"
+          >
+            Heykel Prayogi
+          </span>
+        </h1>
+
+        <!-- Typewriter Role -->
+        <div class="flex items-center gap-2 justify-center lg:justify-start mb-4 h-8">
+          <p id="typewriter-text" class="text-xl sm:text-2xl text-[var(--brand-primary)] font-semibold"></p>
+          <span class="typewriter-cursor"></span>
+        </div>
+
+        <p class="text-[var(--text-secondary)] max-w-lg mx-auto lg:mx-0 mb-8 text-base sm:text-lg leading-relaxed">
+          Membangun solusi <strong class="text-[var(--text-primary)]">AI & Computer Vision</strong> yang berdampak nyata.
+          Spesialisasi di facial expression recognition & fullstack web development.
+          Fresh graduate <span class="text-[var(--brand-primary)] font-medium">D4 Software Engineering Technology</span>.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-10">
+          <a
+            href="/cv.pdf"
+            download="CV-Heykel-Prayogi.pdf"
+            class="
+              w-full sm:w-auto inline-flex items-center justify-center gap-2
+              px-6 py-3 rounded-xl font-semibold text-white
+              bg-[var(--brand-primary)] hover:opacity-90
+              transition-all duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]
+              shadow-[0_4px_14px_rgba(59,130,246,0.3)]
+            "
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download CV
+          </a>
+          <a
+            href="#contact"
+            class="
+              w-full sm:w-auto inline-flex items-center justify-center gap-2
+              px-6 py-3 rounded-xl font-semibold
+              border border-[var(--border-color)] text-[var(--text-primary)]
+              hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]
+              hover:bg-[var(--brand-glow)]
+              transition-all duration-200
+            "
+          >
+            Contact Me
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="flex items-center gap-4 justify-center lg:justify-start">
+          <span class="text-sm text-[var(--text-muted)]">Find me on:</span>
+          <div class="flex items-center gap-3">
+            <a
+              href="https://github.com/heykelprayogi"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              class="w-9 h-9 rounded-lg border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-glow)] transition-all duration-200"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+              </svg>
+            </a>
+            <a
+              href="https://linkedin.com/in/heykelprayogi"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              class="w-9 h-9 rounded-lg border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-glow)] transition-all duration-200"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a
+              href="mailto:heykelprayogi123@gmail.com"
+              aria-label="Email"
+              class="w-9 h-9 rounded-lg border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-glow)] transition-all duration-200"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visual Card -->
+      <div class="hidden lg:flex justify-center items-center">
+        <div class="relative">
+          <!-- Main card -->
+          <div class="w-72 h-72 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] shadow-[var(--shadow-lg)] overflow-hidden flex flex-col items-center justify-center p-8 relative">
+            <!-- Profile avatar placeholder -->
+            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-[var(--brand-primary)] to-purple-500 flex items-center justify-center mb-4 shadow-lg">
+              <span class="text-white text-3xl font-bold">HP</span>
+            </div>
+            <h3 class="font-bold text-[var(--text-primary)] text-lg text-center">Heykel Prayogi</h3>
+            <p class="text-[var(--text-muted)] text-sm text-center mt-1">AI & Computer Vision</p>
+            <p class="text-[var(--text-muted)] text-sm text-center">Software Engineer</p>
+
+            <!-- Decorative elements -->
+            <div class="absolute top-3 right-3 flex gap-1">
+              <div class="w-2 h-2 rounded-full bg-red-400"></div>
+              <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+              <div class="w-2 h-2 rounded-full bg-green-400"></div>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div class="absolute -top-4 -right-4 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--shadow-md)] text-xs font-medium text-[var(--text-primary)] flex items-center gap-1.5" style="animation: float 4s ease-in-out infinite;">
+            <span class="text-yellow-500">⭐</span> FocusAI
+          </div>
+          <div class="absolute -bottom-4 -left-4 px-3 py-1.5 rounded-lg bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--shadow-md)] text-xs font-medium text-[var(--text-primary)] flex items-center gap-1.5" style="animation: float 6s ease-in-out infinite reverse;">
+            <span class="text-blue-500">🧠</span> Deep Learning
+          </div>
+          <div class="absolute top-1/2 -right-12 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[var(--brand-primary)] shadow-[var(--shadow-md)] text-xs font-medium text-white flex items-center gap-1.5" style="animation: float 5s ease-in-out infinite;">
+            <span class="available-dot" style="width:6px;height:6px;"></span> Open to Work
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--text-muted)] text-xs">
+      <span>Scroll down</span>
+      <div class="w-5 h-8 rounded-full border border-[var(--border-color)] flex items-start justify-center pt-1.5">
+        <div class="w-1 h-2 rounded-full bg-[var(--brand-primary)]" style="animation: scrollDot 1.5s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Typewriter Script -->
+<script>
+  const roles = [
+    "Fullstack Developer",
+    "Computer Vision Researcher",
+    "Machine Learning Engineer",
+    "AI Application Builder",
+    "Software Engineer",
+  ];
+
+  let roleIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const el = document.getElementById("typewriter-text");
+
+  function typeWriter() {
+    if (!el) return;
+    const current = roles[roleIndex];
+
+    if (!isDeleting) {
+      el.textContent = current.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === current.length) {
+        isDeleting = true;
+        setTimeout(typeWriter, 1800);
+        return;
+      }
+    } else {
+      el.textContent = current.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+      }
+    }
+
+    const speed = isDeleting ? 60 : 100;
+    setTimeout(typeWriter, speed);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(typeWriter, 800);
+  });
+</script>
+
+<style>
+  @keyframes scrollDot {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(8px); opacity: 0.3; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+</style>

@@ -1,0 +1,232 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { supabase } from "../../lib/supabase";
+
+const { slug } = Astro.params;
+
+// Fetch project by slug
+const { data: project, error } = await supabase
+  .from("projects")
+  .select("*")
+  .eq("slug", slug!)
+  .single();
+
+// 404 jika tidak ditemukan
+if (!project || error) {
+  return Astro.redirect("/404");
+}
+
+// Increment view count (fire-and-forget)
+fetch(`${Astro.url.origin}/api/projects`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ slug }),
+}).catch(() => {});
+
+const CATEGORY_LABELS: Record<string, string> = {
+  ai_ml: "AI & Machine Learning",
+  web_app: "Web Application",
+  script_tool: "Script & Tools",
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  ai_ml: "text-orange-500 bg-orange-500/10 border-orange-500/20",
+  web_app: "text-blue-500 bg-blue-500/10 border-blue-500/20",
+  script_tool: "text-green-500 bg-green-500/10 border-green-500/20",
+};
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("id-ID", {
+    year: "numeric", month: "long", day: "numeric",
+  });
+}
+
+// Konversi markdown sederhana untuk full_description
+function renderDescription(text: string | null): string {
+  if (!text) return "";
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/^## (.+)$/gm, '<h3 class="text-lg font-bold text-[var(--text-primary)] mt-6 mb-2">$1</h3>')
+    .replace(/^- (.+)$/gm, '<li class="text-[var(--text-secondary)] text-sm leading-relaxed">$1</li>')
+    .replace(/(<li.*<\/li>\n?)+/g, (m) => `<ul class="list-disc list-inside space-y-1 mb-4">${m}</ul>`)
+    .replace(/\n\n/g, "</p><p class=\"text-[var(--text-secondary)] text-sm leading-relaxed mb-4\">")
+    .replace(/^(.+)/, '<p class="text-[var(--text-secondary)] text-sm leading-relaxed mb-4">$1</p>');
+}
+---
+
+<BaseLayout
+  title={`${project.title} — Heykel Prayogi`}
+  description={project.short_description}
+  ogImage={project.thumbnail_url ?? "/og-image.jpg"}
+  ogType="article"
+>
+  <Navbar />
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+
+    <!-- Back link -->
+    <a
+      href="/#projects"
+      class="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors mb-8"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Kembali ke Projects
+    </a>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class={`text-xs font-semibold px-3 py-1 rounded-full border ${CATEGORY_COLORS[project.category]}`}>
+          {CATEGORY_LABELS[project.category]}
+        </span>
+        {project.is_featured && (
+          <span class="text-xs font-semibold px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 flex items-center gap-1">
+            ⭐ Featured Project
+          </span>
+        )}
+        <span class="text-xs text-[var(--text-muted)] ml-auto">
+          {formatDate(project.created_at)}
+        </span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-4 leading-tight">
+        {project.title}
+      </h1>
+      <p class="text-lg text-[var(--text-secondary)] leading-relaxed">
+        {project.short_description}
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center gap-3 mb-10 pb-8 border-b border-[var(--border-color)]">
+      {project.live_url && (
+        <a
+          href={project.live_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--brand-primary)] text-white text-sm font-semibold hover:opacity-90 transition-all hover:scale-105 shadow-[0_4px_14px_rgba(59,130,246,0.3)]"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" x2="21" y1="14" y2="3"/>
+          </svg>
+          Live Demo
+        </a>
+      )}
+      {project.github_url && (
+        <a
+          href={project.github_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[var(--border-color)] text-[var(--text-primary)] text-sm font-semibold hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] transition-all"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+          GitHub Repo
+        </a>
+      )}
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Main content -->
+      <div class="md:col-span-2">
+
+        <!-- Thumbnail / Gallery -->
+        {project.thumbnail_url && (
+          <div class="rounded-2xl overflow-hidden border border-[var(--border-color)] mb-8 shadow-[var(--shadow-md)]">
+            <img
+              src={project.thumbnail_url}
+              alt={project.title}
+              class="w-full object-cover max-h-96"
+            />
+          </div>
+        )}
+
+        <!-- Gallery Grid -->
+        {project.gallery_urls && project.gallery_urls.length > 0 && (
+          <div class="grid grid-cols-2 gap-3 mb-8">
+            {project.gallery_urls.map((url: string, i: number) => (
+              <div class="rounded-xl overflow-hidden border border-[var(--border-color)] aspect-video">
+                <img
+                  src={url}
+                  alt={`${project.title} screenshot ${i + 1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <!-- Full Description -->
+        {project.full_description && (
+          <div class="prose-sm">
+            <h2 class="text-xl font-bold text-[var(--text-primary)] mb-4">Tentang Proyek</h2>
+            <div set:html={renderDescription(project.full_description)} />
+          </div>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+
+        <!-- Tech Stack -->
+        <div class="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
+          <h3 class="font-bold text-[var(--text-primary)] mb-4 text-sm uppercase tracking-wide">Tech Stack</h3>
+          <div class="flex flex-wrap gap-2">
+            {project.tech_stack.map((tech: string) => (
+              <span class="text-xs px-2.5 py-1 rounded-full bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border border-[var(--border-color)] font-medium">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Project Info -->
+        <div class="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5">
+          <h3 class="font-bold text-[var(--text-primary)] mb-4 text-sm uppercase tracking-wide">Info Proyek</h3>
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-1">Kategori</dt>
+              <dd class="text-[var(--text-primary)] font-medium">{CATEGORY_LABELS[project.category]}</dd>
+            </div>
+            <div>
+              <dt class="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-1">Status</dt>
+              <dd class="flex items-center gap-1.5">
+                {project.live_url ? (
+                  <><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-green-500 font-medium">Live</span></>
+                ) : (
+                  <><span class="w-2 h-2 rounded-full bg-yellow-500"></span><span class="text-yellow-500 font-medium">Development</span></>
+                )}
+              </dd>
+            </div>
+            {project.view_count > 0 && (
+              <div>
+                <dt class="text-[var(--text-muted)] text-xs uppercase tracking-wide mb-1">Dilihat</dt>
+                <dd class="text-[var(--text-primary)] font-medium">{project.view_count}×</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to all projects -->
+    <div class="mt-12 pt-8 border-t border-[var(--border-color)] text-center">
+      <a
+        href="/#projects"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--border-color)] text-[var(--text-secondary)] font-semibold text-sm hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] transition-all"
+      >
+        ← Lihat Semua Projects
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
