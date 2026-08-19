@@ -3,19 +3,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 
-// Sections
+// Sections (💡 Tambahkan ekstensi .tsx pada komponen React)
 import Hero from "../components/sections/Hero.astro";
 import TechStack from "../components/sections/TechStack.astro";
-import Projects from "../components/sections/Projects";
+import Projects from "../components/sections/Projects.tsx";
 import Timeline from "../components/sections/Timeline.astro";
-import Certificates from "../components/sections/Certificates";
-import Contact from "../components/sections/Contact";
-import Guestbook from "../components/sections/Guestbook";
+import Certificates from "../components/sections/Certificates.tsx";
+import Contact from "../components/sections/Contact.tsx";
+import Guestbook from "../components/sections/Guestbook.tsx";
 
 import { supabase } from "../lib/supabase";
 
 // SSR: Fetch projects & certificates dari Supabase saat server render
-// Ini memastikan SEO-friendly — data ada di HTML saat halaman dimuat
 let initialProjects: any[] = [];
 let initialCertificates: any[] = [];
 
@@ -28,7 +27,6 @@ try {
   if (!projectsRes.error) initialProjects = projectsRes.data ?? [];
   if (!certsRes.error) initialCertificates = certsRes.data ?? [];
 } catch {
-  // Supabase belum dikonfigurasi — data kosong, UI tetap tampil
   console.warn("[index] Supabase not configured yet, showing empty state.");
 }
 ---
@@ -46,16 +44,16 @@ try {
     <!-- 2. Tech Stack (statis) -->
     <TechStack />
 
-    <!-- 3. Projects (React island — filter interaktif, data dari SSR) -->
+    <!-- 3. Projects (React island) -->
     <Projects
       client:visible
       initialProjects={initialProjects}
     />
 
-    <!-- 4. Timeline Pengalaman & Pendidikan (fetch dari Supabase di server) -->
+    <!-- 4. Timeline Pengalaman & Pendidikan -->
     <Timeline />
 
-    <!-- 5. Sertifikat (React island — lightbox modal) -->
+    <!-- 5. Sertifikat (React island) -->
     <Certificates
       client:visible
       initialCertificates={initialCertificates}
@@ -64,7 +62,7 @@ try {
     <!-- 6. Contact Form (React island) -->
     <Contact client:visible />
 
-    <!-- 7. Guestbook (React island — auto-refresh) -->
+    <!-- 7. Guestbook (React island) -->
     <Guestbook client:visible />
   </main>
 
