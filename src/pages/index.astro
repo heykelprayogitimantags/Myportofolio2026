@@ -1,0 +1,94 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+// Import sections (akan dibuat per-fase)
+// import Hero from "../components/sections/Hero.astro";
+// import TechStack from "../components/sections/TechStack.astro";
+// import Projects from "../components/sections/Projects";
+// import Timeline from "../components/sections/Timeline.astro";
+// import Certificates from "../components/sections/Certificates";
+// import Contact from "../components/sections/Contact";
+// import Guestbook from "../components/sections/Guestbook";
+---
+
+<BaseLayout>
+  <Navbar />
+
+  <main>
+    <!-- HERO PLACEHOLDER -->
+    <section
+      id="home"
+      class="min-h-screen flex items-center justify-center section-padding"
+      style="background: var(--gradient-hero);"
+    >
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)] text-sm text-[var(--text-secondary)] mb-6">
+          <span class="available-dot"></span>
+          <span>Available for Work</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-[var(--text-primary)] mb-4 leading-tight">
+          Hi, I'm
+          <span class="gradient-text"> Heykel Prayogi</span>
+        </h1>
+
+        <p class="text-xl sm:text-2xl text-[var(--text-secondary)] mb-3 font-medium">
+          Software Engineer · AI & Computer Vision Specialist
+        </p>
+
+        <p class="text-[var(--text-muted)] max-w-2xl mx-auto mb-8 text-base sm:text-lg">
+          Membangun aplikasi fullstack dengan AI & machine learning.
+          Spesialisasi di facial expression recognition & computer vision.
+          Fresh graduate D4 Software Engineering Technology.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href="/cv.pdf"
+            download
+            class="
+              inline-flex items-center gap-2 px-6 py-3 rounded-xl
+              bg-[var(--brand-primary)] text-white font-semibold
+              hover:opacity-90 transition-all duration-200 hover:scale-105
+              shadow-[var(--shadow-md)]
+            "
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download CV
+          </a>
+          <a
+            href="#contact"
+            class="
+              inline-flex items-center gap-2 px-6 py-3 rounded-xl
+              border border-[var(--border-color)] text-[var(--text-primary)] font-semibold
+              hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]
+              hover:bg-[var(--brand-glow)]
+              transition-all duration-200
+            "
+          >
+            Contact Me
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTIONS AKAN DITAMBAH PER FASE -->
+    <!-- <TechStack /> -->
+    <!-- <Projects client:visible /> -->
+    <!-- <Timeline /> -->
+    <!-- <Certificates client:visible /> -->
+    <!-- <Contact client:visible /> -->
+    <!-- <Guestbook client:visible /> -->
+  </main>
+
+  <Footer />
+</BaseLayout>
