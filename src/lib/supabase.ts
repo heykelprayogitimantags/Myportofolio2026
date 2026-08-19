@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Tipe database (akan diperluas setelah schema dibuat)
+// Tipe database
 export type Database = {
   public: {
     Tables: {
@@ -19,6 +19,7 @@ export type Database = {
           github_url: string | null;
           is_featured: boolean;
           display_order: number;
+          view_count: number;
           created_at: string;
         };
         Insert: Omit<Database["public"]["Tables"]["projects"]["Row"], "id" | "created_at">;
@@ -33,6 +34,7 @@ export type Database = {
           start_date: string;
           end_date: string | null;
           description: string | null;
+          tags: string[];
           display_order: number;
         };
         Insert: Omit<Database["public"]["Tables"]["experiences"]["Row"], "id">;
@@ -45,6 +47,7 @@ export type Database = {
           issue_date: string | null;
           image_url: string;
           credential_url: string | null;
+          category: string;
           display_order: number;
         };
         Insert: Omit<Database["public"]["Tables"]["certificates"]["Row"], "id">;
@@ -74,19 +77,22 @@ export type Database = {
   };
 };
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+// ✅ SAFE: Tidak throw di module level — Vercel tidak crash saat env belum diset
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? "";
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables. Check PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY in .env.local"
-  );
-}
+// Fallback URL agar createClient tidak crash saat env kosong
+const FALLBACK_URL = "https://placeholder.supabase.co";
 
-// Anon client — dipakai di server components (Astro files) dan SSR
-// JANGAN pakai ini di API routes untuk operasi yang butuh service role
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false, // SSR — jangan simpan session di server
-  },
-});
+export const supabase = createClient<Database>(
+  supabaseUrl || FALLBACK_URL,
+  supabaseAnonKey || "placeholder-key",
+  {
+    auth: {
+      persistSession: false,
+    },
+  }
+);
+
+// Helper: cek apakah Supabase benar-benar terkonfigurasi
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
