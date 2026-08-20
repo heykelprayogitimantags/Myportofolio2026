@@ -13,9 +13,12 @@ const navLinks = [
 
 <header
   id="navbar"
-  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+  class="fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-out"
 >
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+  <div
+    id="navbar-inner"
+    class="max-w-6xl mx-auto px-4 sm:px-6 transition-all duration-300"
+  >
     <nav class="flex items-center justify-between h-16">
       <!-- Logo / Name -->
       <a
@@ -34,11 +37,17 @@ const navLinks = [
             <li>
               <a
                 href={link.href}
+                data-nav-link
                 class="
-                  px-3 py-1.5 rounded-lg text-sm font-medium
+                  relative px-3 py-1.5 rounded-lg text-sm font-medium
                   text-[var(--text-secondary)] hover:text-[var(--text-primary)]
                   hover:bg-[var(--bg-tertiary)]
                   transition-all duration-200
+                  after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5
+                  after:h-0.5 after:rounded-full after:bg-[var(--brand-primary)]
+                  after:scale-x-0 after:origin-left after:transition-transform after:duration-300
+                  data-[active=true]:text-[var(--text-primary)]
+                  data-[active=true]:after:scale-x-100
                 "
               >
                 {link.label}
@@ -56,11 +65,21 @@ const navLinks = [
         <button
           id="mobile-menu-btn"
           aria-label="Buka menu"
-          class="md:hidden w-9 h-9 rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)] flex flex-col items-center justify-center gap-1.5"
+          aria-expanded="false"
+          class="md:hidden relative w-9 h-9 rounded-lg border border-[var(--border-color)] bg-[var(--bg-tertiary)] flex flex-col items-center justify-center gap-1.5 active:scale-95 transition-transform"
         >
-          <span class="w-4 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300" id="ham-1"></span>
-          <span class="w-4 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300" id="ham-2"></span>
-          <span class="w-3 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300" id="ham-3"></span>
+          <span
+            class="w-4 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300 origin-center"
+            id="ham-1"
+          ></span>
+          <span
+            class="w-4 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300"
+            id="ham-2"
+          ></span>
+          <span
+            class="w-3 h-0.5 bg-[var(--text-primary)] rounded transition-all duration-300 origin-center self-end mr-[9px]"
+            id="ham-3"
+          ></span>
         </button>
       </div>
     </nav>
@@ -68,27 +87,34 @@ const navLinks = [
     <!-- Mobile Menu Dropdown -->
     <div
       id="mobile-menu"
-      class="md:hidden hidden border-t border-[var(--border-color)] bg-[var(--bg-secondary)] py-3"
+      class="md:hidden grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out overflow-hidden"
     >
-      <ul class="flex flex-col gap-1 px-2">
-        {
-          navLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="
-                  block px-4 py-2.5 rounded-lg text-sm font-medium
-                  text-[var(--text-secondary)] hover:text-[var(--text-primary)]
-                  hover:bg-[var(--bg-tertiary)]
-                  transition-all duration-200
-                "
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="min-h-0 overflow-hidden">
+        <ul
+          class="flex flex-col gap-1 px-2 py-3 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]"
+        >
+          {
+            navLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  data-nav-link
+                  class="
+                    block px-4 py-2.5 rounded-lg text-sm font-medium
+                    text-[var(--text-secondary)] hover:text-[var(--text-primary)]
+                    hover:bg-[var(--bg-tertiary)]
+                    data-[active=true]:text-[var(--brand-primary)]
+                    data-[active=true]:bg-[var(--bg-tertiary)]
+                    transition-all duration-200
+                  "
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </div>
 </header>
@@ -97,42 +123,111 @@ const navLinks = [
 <div class="h-16"></div>
 
 <script>
-  // Navbar scroll effect — tambah backdrop blur saat scroll
-  const navbar = document.getElementById("navbar");
-  const mobileBtn = document.getElementById("mobile-menu-btn");
-  const mobileMenu = document.getElementById("mobile-menu");
+  const navbar = document.getElementById("navbar") as HTMLElement;
+  const navbarInner = document.getElementById("navbar-inner") as HTMLElement;
+  const mobileBtn = document.getElementById("mobile-menu-btn") as HTMLButtonElement;
+  const mobileMenu = document.getElementById("mobile-menu") as HTMLElement;
+  const ham1 = document.getElementById("ham-1") as HTMLElement;
+  const ham2 = document.getElementById("ham-2") as HTMLElement;
+  const ham3 = document.getElementById("ham-3") as HTMLElement;
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
 
-  // Scroll effect
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 20) {
-      navbar?.classList.add(
-        "bg-[var(--bg-primary)/90]",
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+
+    // Background blur muncul begitu mulai scroll
+    if (currentScrollY > 20) {
+      navbarInner.classList.add(
+        "bg-[var(--bg-primary)]/80",
         "backdrop-blur-md",
         "border-b",
         "border-[var(--border-color)]",
-        "shadow-sm"
+        "shadow-sm",
+        "rounded-b-2xl"
       );
     } else {
-      navbar?.classList.remove(
-        "bg-[var(--bg-primary)/90]",
+      navbarInner.classList.remove(
+        "bg-[var(--bg-primary)]/80",
         "backdrop-blur-md",
         "border-b",
         "border-[var(--border-color)]",
-        "shadow-sm"
+        "shadow-sm",
+        "rounded-b-2xl"
       );
+    }
+
+    // Hide saat scroll ke bawah, show saat scroll ke atas
+    const isMenuOpen = mobileBtn.getAttribute("aria-expanded") === "true";
+    if (!isMenuOpen) {
+      if (currentScrollY > lastScrollY && currentScrollY > 120) {
+        navbar.style.transform = "translateY(-100%)";
+      } else {
+        navbar.style.transform = "translateY(0)";
+      }
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(handleScroll);
+      ticking = true;
     }
   });
 
   // Mobile menu toggle
-  mobileBtn?.addEventListener("click", () => {
-    const isHidden = mobileMenu?.classList.contains("hidden");
-    mobileMenu?.classList.toggle("hidden", !isHidden);
+  function toggleMenu(forceClose = false) {
+    const isOpen = mobileBtn.getAttribute("aria-expanded") === "true";
+    const next = forceClose ? false : !isOpen;
+
+    mobileBtn.setAttribute("aria-expanded", String(next));
+    mobileMenu.style.gridTemplateRows = next ? "1fr" : "0fr";
+
+    // Animasi hamburger jadi X
+    if (next) {
+      ham1.style.transform = "translateY(4px) rotate(45deg)";
+      ham2.style.opacity = "0";
+      ham3.style.transform = "translateY(-4px) rotate(-45deg)";
+      ham3.style.width = "16px";
+    } else {
+      ham1.style.transform = "none";
+      ham2.style.opacity = "1";
+      ham3.style.transform = "none";
+      ham3.style.width = "12px";
+    }
+  }
+
+  mobileBtn?.addEventListener("click", () => toggleMenu());
+
+  // Tutup mobile menu saat link diklik
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => toggleMenu(true));
   });
 
-  // Close mobile menu on link click
-  mobileMenu?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      mobileMenu.classList.add("hidden");
-    });
-  });
+  // Active link highlight berdasarkan section yang terlihat di viewport
+  const sections = Array.from(navLinks)
+    .map((link) => document.querySelector(link.getAttribute("href") || ""))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = `#${entry.target.id}`;
+          navLinks.forEach((link) => {
+            const isActive = link.getAttribute("href") === id;
+            link.setAttribute("data-active", String(isActive));
+          });
+        }
+      });
+    },
+    { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
 </script>
