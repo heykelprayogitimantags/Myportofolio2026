@@ -1,10 +1,9 @@
 import type { APIRoute } from "astro";
-import { supabase } from "../../lib/supabase";
-import { supabaseAdmin } from "../../lib/supabase-admin";
+import { supabase, isSupabaseConfigured } from "../../lib/supabase";
+import { supabaseAdmin, isAdminConfigured } from "../../lib/supabase-admin";
 import { guestbookSchema, apiSuccess, apiError } from "../../lib/validators";
 
-// Rate limiting sederhana: simpan IP + timestamp di memory
-// Untuk produksi bisa pakai Upstash Redis
+// In-memory rate limiting: IP → last timestamp
 const rateLimitMap = new Map<string, number>();
 const RATE_LIMIT_MS = 5 * 60 * 1000; // 5 menit
 
@@ -24,9 +23,16 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-// GET — daftar guestbook entries (terbaru di atas)
+// GET — list guestbook entries
 export const GET: APIRoute = async () => {
   try {
+    if (!isSupabaseConfigured) {
+      return new Response(JSON.stringify(apiSuccess([])), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const { data, error } = await supabase
       .from("guestbook_entries")
       .select("id, name, message, created_at")
@@ -34,7 +40,7 @@ export const GET: APIRoute = async () => {
       .limit(100);
 
     if (error) {
-      console.error("[guestbook GET] Supabase error:", error);
+      console.error("[guestbook GET] error:", error);
       return new Response(JSON.stringify(apiError("Gagal memuat guestbook.")), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -46,20 +52,19 @@ export const GET: APIRoute = async () => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("[guestbook GET] error:", err);
-    return new Response(JSON.stringify(apiError("Server error.")), {
-      status: 500,
+    console.error("[guestbook GET] unexpected:", err);
+    return new Response(JSON.stringify(apiSuccess([])), {
+      status: 200,
       headers: { "Content-Type": "application/json" },
     });
   }
 };
 
-// POST — tambah entry baru (dengan rate limiting + honeypot)
+// POST — tambah entry baru
 export const POST: APIRoute = async ({ request }) => {
   try {
     const ip = getClientIp(request);
 
-    // Rate limit check
     if (isRateLimited(ip)) {
       return new Response(
         JSON.stringify(apiError("Terlalu banyak pesan. Coba lagi dalam 5 menit.")),
@@ -67,7 +72,6 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Parse body
     let body: unknown;
     try {
       body = await request.json();
@@ -78,7 +82,6 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // Validasi Zod
     const result = guestbookSchema.safeParse(body);
     if (!result.success) {
       const errors: Record<string, string[]> = {};
@@ -103,7 +106,13 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // Insert ke Supabase
+    if (!isAdminConfigured) {
+      return new Response(
+        JSON.stringify(apiError("Database belum dikonfigurasi. Hubungi admin.")),
+        { status: 503, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const { data, error: dbError } = await supabaseAdmin
       .from("guestbook_entries")
       .insert({ name: name.trim(), message: message.trim() })
@@ -111,14 +120,13 @@ export const POST: APIRoute = async ({ request }) => {
       .single();
 
     if (dbError) {
-      console.error("[guestbook POST] Supabase error:", dbError);
+      console.error("[guestbook POST] error:", dbError);
       return new Response(JSON.stringify(apiError("Gagal menyimpan pesan.")), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // Simpan timestamp untuk rate limiting
     rateLimitMap.set(ip, Date.now());
 
     return new Response(JSON.stringify(apiSuccess(data, "Pesan berhasil ditambahkan!")), {
@@ -126,7 +134,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("[guestbook POST] error:", err);
+    console.error("[guestbook POST] unexpected:", err);
     return new Response(JSON.stringify(apiError("Server error.")), {
       status: 500,
       headers: { "Content-Type": "application/json" },

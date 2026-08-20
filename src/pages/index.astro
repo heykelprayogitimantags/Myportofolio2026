@@ -2,32 +2,30 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-
-// Sections (💡 Tambahkan ekstensi .tsx pada komponen React)
 import Hero from "../components/sections/Hero.astro";
 import TechStack from "../components/sections/TechStack.astro";
-import Projects from "../components/sections/Projects.tsx";
+import Projects from "../components/sections/Projects";
 import Timeline from "../components/sections/Timeline.astro";
-import Certificates from "../components/sections/Certificates.tsx";
-import Contact from "../components/sections/Contact.tsx";
-import Guestbook from "../components/sections/Guestbook.tsx";
-
-import { supabase } from "../lib/supabase.ts";
+import Certificates from "../components/sections/Certificates";
+import Contact from "../components/sections/Contact";
+import Guestbook from "../components/sections/Guestbook";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 // SSR: Fetch projects & certificates dari Supabase saat server render
 let initialProjects: any[] = [];
 let initialCertificates: any[] = [];
 
-try {
-  const [projectsRes, certsRes] = await Promise.all([
-    supabase.from("projects").select("*").order("display_order", { ascending: true }),
-    supabase.from("certificates").select("*").order("display_order", { ascending: true }),
-  ]);
-
-  if (!projectsRes.error) initialProjects = projectsRes.data ?? [];
-  if (!certsRes.error) initialCertificates = certsRes.data ?? [];
-} catch {
-  console.warn("[index] Supabase not configured yet, showing empty state.");
+if (isSupabaseConfigured) {
+  try {
+    const [projectsRes, certsRes] = await Promise.all([
+      supabase.from("projects").select("*").order("display_order", { ascending: true }),
+      supabase.from("certificates").select("*").order("display_order", { ascending: true }),
+    ]);
+    if (!projectsRes.error) initialProjects = projectsRes.data ?? [];
+    if (!certsRes.error) initialCertificates = certsRes.data ?? [];
+  } catch (e) {
+    console.warn("[index] Supabase fetch failed:", e);
+  }
 }
 ---
 
@@ -36,35 +34,14 @@ try {
   description="Portofolio Heykel Prayogi, Software Engineer spesialisasi AI & Computer Vision. Membangun aplikasi fullstack dengan machine learning dan facial recognition."
 >
   <Navbar />
-
   <main>
-    <!-- 1. Hero -->
     <Hero />
-
-    <!-- 2. Tech Stack (statis) -->
     <TechStack />
-
-    <!-- 3. Projects (React island) -->
-    <Projects
-      client:visible
-      initialProjects={initialProjects}
-    />
-
-    <!-- 4. Timeline Pengalaman & Pendidikan -->
+    <Projects client:visible initialProjects={initialProjects} />
     <Timeline />
-
-    <!-- 5. Sertifikat (React island) -->
-    <Certificates
-      client:visible
-      initialCertificates={initialCertificates}
-    />
-
-    <!-- 6. Contact Form (React island) -->
+    <Certificates client:visible initialCertificates={initialCertificates} />
     <Contact client:visible />
-
-    <!-- 7. Guestbook (React island) -->
     <Guestbook client:visible />
   </main>
-
   <Footer />
 </BaseLayout>

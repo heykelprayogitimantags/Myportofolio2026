@@ -1,134 +1,115 @@
 ---
-// Tech Stack Section — 4 kategori: Frontend, Backend, Database, AI/ML Tools
-
+// Tech Stack Section — Light Theme Default with Dark Mode Support
 const techCategories = [
   {
-    category: "Frontend",
-    icon: "🎨",
-    color: "from-blue-500/10 to-cyan-500/10 border-blue-500/20",
-    accent: "#3b82f6",
+    category: "Frontend Engineering",
+    description: "Merancang antarmuka web yang responsif, cepat, dan terstruktur.",
     skills: [
-      { name: "Astro", level: 4 },
-      { name: "React", level: 4 },
-      { name: "TypeScript", level: 4 },
-      { name: "Tailwind CSS", level: 5 },
-      { name: "HTML/CSS", level: 5 },
-      { name: "Framer Motion", level: 3 },
-      { name: "JavaScript", level: 4 },
+      { name: "Astro", tag: "SSG / Framework" },
+      { name: "React", tag: "UI Library" },
+      { name: "TypeScript", tag: "Language" },
+      { name: "Tailwind CSS", tag: "Styling" },
+      { name: "Next.js", tag: "Framework" },
+      { name: "HTML5 / CSS3", tag: "Core Web" },
     ],
   },
   {
-    category: "Backend",
-    icon: "⚙️",
-    color: "from-green-500/10 to-emerald-500/10 border-green-500/20",
-    accent: "#22c55e",
+    category: "Backend & Systems",
+    description: "Arsitektur REST API, server logic, dan integrasi microservices.",
     skills: [
-      { name: "Python", level: 5 },
-      { name: "Flask", level: 4 },
-      { name: "Node.js", level: 3 },
-      { name: "REST API", level: 4 },
-      { name: "Zod", level: 4 },
+      { name: "Python", tag: "Core Language" },
+      { name: "Node.js", tag: "Runtime" },
+      { name: "FastAPI / Flask", tag: "REST APIs" },
+      { name: "Express.js", tag: "Framework" },
+      { name: "Zod / Schema", tag: "Validation" },
     ],
   },
   {
-    category: "Database & Cloud",
-    icon: "🗄️",
-    color: "from-purple-500/10 to-violet-500/10 border-purple-500/20",
-    accent: "#8b5cf6",
+    category: "Database & Infrastructure",
+    description: "Pemodelan basis data, deployment cloud, dan alur CI/CD.",
     skills: [
-      { name: "Supabase", level: 4 },
-      { name: "PostgreSQL", level: 4 },
-      { name: "SQLite", level: 4 },
-      { name: "Vercel", level: 4 },
-      { name: "Git & GitHub", level: 4 },
+      { name: "PostgreSQL", tag: "Relational DB" },
+      { name: "Supabase", tag: "BaaS & Auth" },
+      { name: "SQLite", tag: "Embedded DB" },
+      { name: "Docker", tag: "Containerization" },
+      { name: "Vercel / Cloud", tag: "Deployment" },
+      { name: "Git & GitHub", tag: "VCS Workflow" },
     ],
   },
   {
-    category: "AI / ML Tools",
-    icon: "🧠",
-    color: "from-orange-500/10 to-red-500/10 border-orange-500/20",
-    accent: "#f97316",
+    category: "AI & Computer Vision",
+    description: "Pengembangan model deep learning dan pipeline olah citra digital.",
     skills: [
-      { name: "TensorFlow", level: 4 },
-      { name: "Keras", level: 4 },
-      { name: "OpenCV", level: 4 },
-      { name: "MobileNetV2", level: 4 },
-      { name: "MTCNN", level: 4 },
-      { name: "scikit-learn", level: 3 },
-      { name: "NumPy / Pandas", level: 4 },
-      { name: "Jupyter", level: 4 },
+      { name: "PyTorch / TensorFlow", tag: "Deep Learning" },
+      { name: "OpenCV", tag: "Computer Vision" },
+      { name: "YOLOv8 / MobileNet", tag: "Object & Face AI" },
+      { name: "scikit-learn", tag: "Machine Learning" },
+      { name: "Pandas / NumPy", tag: "Data Analysis" },
     ],
   },
 ];
-
-// Level dot helper: 1–5
-const levelLabels = ["", "Beginner", "Basic", "Intermediate", "Advanced", "Expert"];
 ---
 
-<section id="tech-stack" class="section-padding bg-[var(--bg-secondary)]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+<section id="tech-stack" class="py-24 bg-slate-50/60 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 relative overflow-hidden">
+  <!-- Subtle Grid Overlay -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b0a_1px,transparent_1px),linear-gradient(to_bottom,#1e293b0a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-60"></div>
 
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
     <!-- Section Header -->
-    <div class="text-center mb-14">
-      <span class="inline-block text-[var(--brand-primary)] text-sm font-semibold tracking-widest uppercase mb-3">
-        Skills & Technologies
-      </span>
-      <h2 class="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-4">
-        Tech Stack
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-xs font-mono font-semibold tracking-widest text-blue-600 dark:text-blue-400 uppercase mb-3">
+        // Capabilities & Tooling
       </h2>
-      <p class="text-[var(--text-secondary)] max-w-xl mx-auto">
-        Teknologi yang saya kuasai — dengan <strong class="text-[var(--text-primary)]">AI/ML Tools</strong> sebagai spesialisasi utama.
+      <h3 class="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+        Tech Stack & Expertise
+      </h3>
+      <p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed">
+        Bahasa pemrograman, framework, dan teknologi yang saya gunakan untuk membangun sistem perangkat lunak berskala produksi.
       </p>
-      <div class="w-16 h-1 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-purple-500 mx-auto mt-4"></div>
     </div>
 
     <!-- Tech Categories Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       {
-        techCategories.map((cat) => (
-          <div
-            class={`rounded-2xl border bg-gradient-to-br ${cat.color} bg-[var(--bg-card)] p-6 hover:shadow-[var(--shadow-glow)] transition-all duration-300 card-hover`}
-            style={`--accent: ${cat.accent};`}
-          >
-            <!-- Card Header -->
-            <div class="flex items-center gap-3 mb-5">
-              <span class="text-2xl">{cat.icon}</span>
-              <h3 class="font-bold text-[var(--text-primary)] text-lg">{cat.category}</h3>
-            </div>
+        techCategories.map((cat, idx) => (
+          <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 backdrop-blur-md p-6 sm:p-8 shadow-sm hover:shadow-md dark:hover:border-slate-700 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <!-- Category Title -->
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {cat.category}
+                </h4>
+                <span class="text-xs font-mono text-slate-400 dark:text-slate-500">0{idx + 1}</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                {cat.description}
+              </p>
 
-            <!-- Skills List -->
-            <div class="space-y-3">
-              {
-                cat.skills.map((skill) => (
-                  <div class="flex items-center justify-between gap-3">
-                    <span class="text-sm font-medium text-[var(--text-primary)] min-w-0 truncate">
-                      {skill.name}
+              <!-- Skill Badges -->
+              <div class="flex flex-wrap gap-2.5">
+                {cat.skills.map((skill) => (
+                  <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all duration-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
+                    <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{skill.name}</span>
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-mono border-l border-slate-200 dark:border-slate-800 pl-2">
+                      {skill.tag}
                     </span>
-                    <!-- Level dots -->
-                    <div class="flex items-center gap-1 flex-shrink-0" title={levelLabels[skill.level]}>
-                      {[1, 2, 3, 4, 5].map((dot) => (
-                        <div
-                          class="w-2 h-2 rounded-full transition-all duration-200"
-                          style={
-                            dot <= skill.level
-                              ? `background: ${cat.accent}; box-shadow: 0 0 4px ${cat.accent}40;`
-                              : "background: var(--border-color);"
-                          }
-                        />
-                      ))}
-                    </div>
                   </div>
-                ))
-              }
+                ))}
+              </div>
             </div>
           </div>
         ))
       }
     </div>
 
-    <!-- Bottom Note -->
-    <p class="text-center text-xs text-[var(--text-muted)] mt-8">
-      ⚡ Level: 1 Beginner → 5 Expert &nbsp;|&nbsp; Selalu belajar teknologi baru
-    </p>
+    <!-- Architecture Note -->
+    <div class="mt-12 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/30 text-center max-w-2xl mx-auto shadow-sm">
+      <p class="text-xs text-slate-600 dark:text-slate-400 font-mono">
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold">✓</span> Berfokus pada arsitektur modular, keandalan sistem, dan integrasi AI ke dalam ekosistem web.
+      </p>
+    </div>
+
   </div>
 </section>

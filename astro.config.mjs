@@ -7,15 +7,19 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  site: process.env.PUBLIC_SITE_URL || "http://localhost:4321",
-  adapter: vercel({
-    webAnalytics: { enabled: true },
-  }),
+  site: "https://myportofolio2026-pi.vercel.app",
+  adapter: vercel(),
   integrations: [
     react(),
     sitemap(),
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        // Pastikan external dependencies tidak di-bundle ulang
+        external: [],
+      },
+    },
   },
 });

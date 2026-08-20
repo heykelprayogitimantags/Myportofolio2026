@@ -1,11 +1,12 @@
 ---
-import { supabase } from "../../lib/supabase";
+import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 
 // Fetch experiences dari Supabase
 let experiences: any[] = [];
 let error: string | null = null;
 
 try {
+  if (!isSupabaseConfigured) throw new Error("Supabase not configured");
   const { data, error: fetchError } = await supabase
     .from("experiences")
     .select("*")
