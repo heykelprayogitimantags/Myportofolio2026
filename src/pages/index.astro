@@ -9,6 +9,7 @@ import Timeline from "../components/sections/Timeline.astro";
 import Certificates from "../components/sections/Certificates";
 import Contact from "../components/sections/Contact";
 import Guestbook from "../components/sections/Guestbook";
+import Preloader from "../components/Preloader";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 // SSR: Fetch projects & certificates dari Supabase saat server render
@@ -33,6 +34,9 @@ if (isSupabaseConfigured) {
   title="Heykel Prayogi Timanta G.s — Software Engineer & AI/Computer Vision Specialist"
   description="Portofolio Heykel Prayogi, Software Engineer spesialisasi AI & Computer Vision. Membangun aplikasi fullstack dengan machine learning dan facial recognition."
 >
+  <!-- Preloader animasi dimuat pertama kali saat halaman dibuka -->
+  <Preloader client:load />
+
   <Navbar />
   <main>
     <Hero />
