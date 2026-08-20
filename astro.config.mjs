@@ -6,10 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   output: "server",
-  site: process.env.PUBLIC_SITE_URL || "https://myportofolio2026-pi.vercel.app",
-  adapter: vercel({
-    includeFiles: ["./dist/**"],
-  }),
+  adapter: vercel(),
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
