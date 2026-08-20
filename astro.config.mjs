@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  output: "static",
+  output: "server",
   adapter: vercel(),
   integrations: [react(), sitemap()],
   vite: {
