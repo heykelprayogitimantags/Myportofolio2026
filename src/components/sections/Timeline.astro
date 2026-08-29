@@ -22,23 +22,35 @@ try {
       id: "1",
       type: "education",
       title: "D4 Software Engineering Technology",
-      institution: "Politeknik / Universitas",
-      location: "Indonesia",
+      institution: "Politeknik Negeri Medan",
+      location: "Medan, Indonesia",
       start_date: "2020-09-01",
       end_date: "2024-08-31",
-      description: "Program D4 Teknologi Rekayasa Perangkat Lunak. Fokus pada pengembangan perangkat lunak fullstack dan riset AI/Computer Vision. Skripsi: Sistem Deteksi Fokus Siswa dengan Facial Expression Recognition.",
+      description: "Fokus pada pengembangan perangkat lunak fullstack dan riset AI. Skripsi: Penerapan Computer Vision Berbasis CNN untuk Deteksi Ekspresi Wajah Siswa.",
       tags: ["Software Engineering", "AI/ML", "Fullstack"],
     },
     {
       id: "2",
+      type: "publication", // KATEGORI BARU UNTUK JURNAL
+      title: "Deteksi Fokus Siswa Menggunakan MobileNetV2 dan MTCNN",
+      institution: "Jurnal Nasional Teknologi Komputer (JNTK)",
+      location: "SINTA 3",
+      start_date: "2024-05-15",
+      end_date: "2024-05-15",
+      description: "Publikasi paper penelitian mengenai implementasi model deep learning untuk menganalisis tingkat fokus siswa secara real-time di dalam kelas.",
+      tags: ["Journal", "Computer Vision", "Deep Learning"],
+      url: "https://jurnal.contoh.com/paper-heykel", // Link jurnal (opsional)
+    },
+    {
+      id: "3",
       type: "work",
-      title: "Skripsi Researcher — Facial Expression Recognition",
-      institution: "Laboratorium AI & Computer Vision",
-      location: "Indonesia",
-      start_date: "2023-09-01",
-      end_date: "2024-06-30",
-      description: "Penelitian mendalam di bidang computer vision. Mengembangkan FocusAI — sistem deteksi tingkat fokus siswa menggunakan MobileNetV2 + MTCNN.",
-      tags: ["Deep Learning", "TensorFlow", "Computer Vision"],
+      title: "Frontend Developer Intern",
+      institution: "Tech Company",
+      location: "Jakarta, Indonesia",
+      start_date: "2023-01-01",
+      end_date: "2023-06-30",
+      description: "Membangun antarmuka dashboard admin menggunakan React dan Tailwind CSS.",
+      tags: ["React", "Tailwind CSS"],
     },
   ];
 }
@@ -50,44 +62,46 @@ function formatDate(dateStr: string | null) {
   return d.toLocaleDateString("id-ID", { month: "short", year: "numeric" });
 }
 
-// Type colors
+// PENAMBAHAN KATEGORI BARU DI SINI (Publication & Achievement)
 const typeConfig: Record<string, { label: string; color: string; dot: string }> = {
   education: { label: "Pendidikan", color: "text-blue-500 bg-blue-500/10 border-blue-500/20", dot: "#3b82f6" },
   work: { label: "Pengalaman", color: "text-green-500 bg-green-500/10 border-green-500/20", dot: "#22c55e" },
   organization: { label: "Organisasi", color: "text-purple-500 bg-purple-500/10 border-purple-500/20", dot: "#8b5cf6" },
+  publication: { label: "Publikasi Jurnal", color: "text-rose-500 bg-rose-500/10 border-rose-500/20", dot: "#f43f5e" },
+  achievement: { label: "Penghargaan", color: "text-amber-500 bg-amber-500/10 border-amber-500/20", dot: "#f59e0b" },
 };
 ---
 
-<section id="experience" class="section-padding bg-[var(--bg-primary)]">
+<section id="experience" class="section-padding bg-[var(--bg-primary)] overflow-hidden">
   <div class="max-w-6xl mx-auto px-4 sm:px-6">
 
     <!-- Section Header -->
-    <div class="text-center mb-14">
+    <div class="text-center mb-16">
       <span class="inline-block text-[var(--brand-primary)] text-sm font-semibold tracking-widest uppercase mb-3">
-        Journey
+        Journey & Milestones
       </span>
-      <h2 class="text-3xl sm:text-4xl font-bold text-[var(--text-primary)] mb-4">
-        Pengalaman & Pendidikan
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text-primary)] mb-4">
+        Pengalaman & Pencapaian
       </h2>
-      <p class="text-[var(--text-secondary)] max-w-xl mx-auto">
-        Perjalanan akademik dan profesional saya dalam dunia software engineering & AI.
+      <p class="text-[var(--text-secondary)] max-w-xl mx-auto text-lg">
+        Perjalanan akademik, karir profesional, serta publikasi riset saya dalam dunia Software Engineering & AI.
       </p>
-      <div class="w-16 h-1 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-purple-500 mx-auto mt-4"></div>
+      <div class="w-16 h-1 rounded-full bg-gradient-to-r from-[var(--brand-primary)] to-purple-500 mx-auto mt-6"></div>
     </div>
 
     {error && (
-      <div class="text-center text-yellow-500 text-sm mb-8 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+      <div class="text-center text-yellow-500 text-sm mb-8 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20 max-w-2xl mx-auto">
         ⚠️ {error} — menampilkan data fallback.
       </div>
     )}
 
     <!-- Timeline -->
-    <div class="relative">
+    <div class="relative mt-8">
       <!-- Center line (desktop) -->
-      <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent -translate-x-1/2"></div>
+      <div class="hidden md:block absolute left-1/2 top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent -translate-x-1/2"></div>
 
       <!-- Timeline items -->
-      <div class="space-y-8">
+      <div class="space-y-12 md:space-y-8">
         {
           experiences.map((exp, idx) => {
             const config = typeConfig[exp.type] ?? typeConfig.education;
@@ -97,67 +111,86 @@ const typeConfig: Record<string, { label: string; color: string; dot: string }> 
               <div class={`relative flex items-start gap-8 ${isLeft ? "md:flex-row" : "md:flex-row-reverse"}`}>
 
                 <!-- Content Card -->
-                <div class="flex-1 md:max-w-[calc(50%-2rem)]">
-                  <div class="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 hover:border-[var(--brand-primary)]/30 hover:shadow-[var(--shadow-md)] transition-all duration-300 card-hover">
+                <div class="flex-1 md:max-w-[calc(50%-3rem)] w-full">
+                  <div class="group rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 md:p-8 hover:border-[var(--brand-primary)]/40 hover:shadow-[var(--shadow-md)] transition-all duration-300 relative overflow-hidden">
+                    
+                    <!-- Subtle Glow on Hover -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-[var(--brand-primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
-                    <!-- Type badge -->
-                    <span class={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border ${config.color} mb-3`}>
-                      {config.label}
-                    </span>
+                    <div class="relative z-10">
+                      <!-- Type badge -->
+                      <span class={`inline-block text-xs font-bold px-3 py-1 rounded-full border ${config.color} mb-4 shadow-sm`}>
+                        {config.label}
+                      </span>
 
-                    <!-- Title & Institution -->
-                    <h3 class="font-bold text-[var(--text-primary)] text-lg leading-snug mb-1">
-                      {exp.title}
-                    </h3>
-                    <div class="flex flex-wrap items-center gap-2 text-sm text-[var(--text-muted)] mb-3">
-                      <span class="font-medium text-[var(--text-secondary)]">{exp.institution}</span>
-                      {exp.location && (
-                        <>
-                          <span>·</span>
-                          <span>{exp.location}</span>
-                        </>
-                      )}
-                    </div>
-
-                    <!-- Date range -->
-                    <div class="flex items-center gap-1.5 text-xs text-[var(--text-muted)] mb-3">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-                        <line x1="16" x2="16" y1="2" y2="6"/>
-                        <line x1="8" x2="8" y1="2" y2="6"/>
-                        <line x1="3" x2="21" y1="10" y2="10"/>
-                      </svg>
-                      <span>{formatDate(exp.start_date)} — {formatDate(exp.end_date)}</span>
-                    </div>
-
-                    <!-- Description -->
-                    {exp.description && (
-                      <p class="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                        {exp.description}
-                      </p>
-                    )}
-
-                    <!-- Tags -->
-                    {exp.tags && exp.tags.length > 0 && (
-                      <div class="flex flex-wrap gap-1.5">
-                        {exp.tags.map((tag: string) => (
-                          <span class="text-xs px-2 py-0.5 rounded-full bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-color)]">
-                            {tag}
-                          </span>
-                        ))}
+                      <!-- Title & Institution -->
+                      <h3 class="font-bold text-[var(--text-primary)] text-xl leading-snug mb-2 group-hover:text-[var(--brand-primary)] transition-colors">
+                        {exp.title}
+                      </h3>
+                      <div class="flex flex-wrap items-center gap-2 text-sm text-[var(--text-muted)] mb-4">
+                        <span class="font-semibold text-[var(--text-secondary)]">{exp.institution}</span>
+                        {exp.location && (
+                          <>
+                            <span class="w-1 h-1 rounded-full bg-[var(--text-muted)]"></span>
+                            <span>{exp.location}</span>
+                          </>
+                        )}
                       </div>
-                    )}
+
+                      <!-- Date range -->
+                      <div class="flex items-center gap-2 text-xs font-medium text-[var(--text-muted)] mb-4 bg-[var(--bg-tertiary)] inline-flex px-3 py-1.5 rounded-lg border border-[var(--border-color)]">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                          <line x1="16" x2="16" y1="2" y2="6"/>
+                          <line x1="8" x2="8" y1="2" y2="6"/>
+                          <line x1="3" x2="21" y1="10" y2="10"/>
+                        </svg>
+                        <span>
+                          {formatDate(exp.start_date)} 
+                          {exp.start_date !== exp.end_date ? ` — ${formatDate(exp.end_date)}` : ''}
+                        </span>
+                      </div>
+
+                      <!-- Description -->
+                      {exp.description && (
+                        <p class="text-sm text-[var(--text-secondary)] leading-relaxed mb-5">
+                          {exp.description}
+                        </p>
+                      )}
+
+                      <!-- Tags & Links Container -->
+                      <div class="flex flex-wrap items-center justify-between gap-4 mt-auto">
+                        <!-- Tags -->
+                        {exp.tags && exp.tags.length > 0 && (
+                          <div class="flex flex-wrap gap-2">
+                            {exp.tags.map((tag: string) => (
+                              <span class="text-[11px] font-medium px-2.5 py-1 rounded-md bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-color)]">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <!-- Action Button (Khusus untuk Jurnal/Sertifikat jika ada URL) -->
+                        {exp.url && (
+                          <a href={exp.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--brand-primary)] hover:text-blue-400 transition-colors">
+                            Lihat Detail
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Center Dot (desktop) -->
-                <div class="hidden md:flex absolute left-1/2 top-6 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-[var(--bg-primary)] items-center justify-center z-10"
+                <div class="hidden md:flex absolute left-1/2 top-10 -translate-x-1/2 w-5 h-5 rounded-full border-[3px] border-[var(--bg-primary)] items-center justify-center z-10 transition-transform duration-300 hover:scale-125"
                   style={`background: ${config.dot}; box-shadow: 0 0 0 4px ${config.dot}20;`}>
                 </div>
 
                 <!-- Left dot (mobile) -->
-                <div class="md:hidden flex-shrink-0 w-3 h-3 rounded-full mt-6 border-2 border-[var(--bg-primary)]"
-                  style={`background: ${config.dot};`}>
+                <div class="md:hidden flex-shrink-0 w-4 h-4 rounded-full mt-8 border-[3px] border-[var(--bg-primary)] relative z-10"
+                  style={`background: ${config.dot}; box-shadow: 0 0 0 3px ${config.dot}20;`}>
                 </div>
 
                 <!-- Empty spacer for alternating layout -->

@@ -10,6 +10,7 @@ import Certificates from "../components/sections/Certificates";
 import Contact from "../components/sections/Contact";
 import Guestbook from "../components/sections/Guestbook";
 import Preloader from "../components/Preloader";
+import ScrollToTop from "../components/ScrollToTop.astro"; // <-- Tambahkan import ini
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 // SSR: Fetch projects & certificates dari Supabase saat server render
@@ -48,4 +49,7 @@ if (isSupabaseConfigured) {
     <Guestbook client:visible />
   </main>
   <Footer />
+  
+  <!-- Tombol Scroll ke Atas diletakkan di luar main agar melayang bebas -->
+  <ScrollToTop />
 </BaseLayout>
