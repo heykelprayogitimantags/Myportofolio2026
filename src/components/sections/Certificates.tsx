@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, ExternalLink, Calendar } from "lucide-react";
+import { X, ExternalLink, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Certificate = {
@@ -29,6 +29,14 @@ function formatDate(dateStr: string | null) {
 
 export default function Certificates({ initialCertificates }: Props) {
   const [selected, setSelected] = useState<Certificate | null>(null);
+  
+  // 1. Tambahkan state untuk mengontrol tampilan semua kartu
+  const [showAll, setShowAll] = useState(false);
+
+  // 2. Tentukan data yang ditampilkan (Semua vs 4 saja)
+  const displayedCertificates = showAll 
+    ? initialCertificates 
+    : initialCertificates.slice(0, 4);
 
   return (
     <section id="certificates" className="section-padding bg-[var(--bg-secondary)]">
@@ -54,52 +62,81 @@ export default function Certificates({ initialCertificates }: Props) {
             <p>Sertifikat akan segera ditambahkan.</p>
           </div>
         ) : (
-          /* Certificates Grid */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {initialCertificates.map((cert, idx) => (
-              <motion.button
-                key={cert.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.07 }}
-                onClick={() => setSelected(cert)}
-                className="group text-left rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden hover:border-[var(--brand-primary)]/40 hover:shadow-[var(--shadow-glow)] transition-all duration-300 cursor-pointer"
-              >
-                {/* Thumbnail */}
-                <div className="relative h-36 bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-secondary)] overflow-hidden">
-                  <img
-                    src={cert.image_url}
-                    alt={cert.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3">
-                    <span className="text-white text-xs font-semibold px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm">
-                      Klik untuk detail
-                    </span>
+          <>
+            {/* Certificates Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {/* 3. Gunakan displayedCertificates di sini, BUKAN initialCertificates */}
+              {displayedCertificates.map((cert, idx) => (
+                <motion.button
+                  key={cert.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.07 }}
+                  onClick={() => setSelected(cert)}
+                  className="group text-left rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden hover:border-[var(--brand-primary)]/40 hover:shadow-[var(--shadow-glow)] transition-all duration-300 cursor-pointer flex flex-col"
+                >
+                  {/* Thumbnail */}
+                  <div className="relative h-36 bg-[var(--bg-tertiary)] overflow-hidden flex items-center justify-center p-4">
+                    <img
+                      src={cert.image_url}
+                      alt={cert.title}
+                      className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white text-xs font-semibold px-4 py-2 rounded-full border border-white/40 bg-black/40 backdrop-blur-sm">
+                        Klik untuk detail
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Info */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-[var(--text-primary)] text-sm leading-snug mb-1 group-hover:text-[var(--brand-primary)] transition-colors line-clamp-2">
-                    {cert.title}
-                  </h3>
-                  <p className="text-xs text-[var(--text-muted)]">{cert.issuer}</p>
-                  {cert.issue_date && (
-                    <p className="text-xs text-[var(--text-muted)] mt-1">{formatDate(cert.issue_date)}</p>
+                  {/* Info */}
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="font-semibold text-[var(--text-primary)] text-sm leading-snug mb-1 group-hover:text-[var(--brand-primary)] transition-colors line-clamp-2">
+                      {cert.title}
+                    </h3>
+                    <p className="text-xs text-[var(--text-muted)] mt-auto">{cert.issuer}</p>
+                    {cert.issue_date && (
+                      <p className="text-xs text-[var(--text-muted)] mt-1">{formatDate(cert.issue_date)}</p>
+                    )}
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+
+            {/* 4. Tombol Lihat Selengkapnya */}
+            {initialCertificates.length > 4 && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="mt-10 flex justify-center"
+              >
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="group flex items-center gap-2 px-6 py-2.5 rounded-full border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] font-semibold hover:bg-[var(--brand-primary)] hover:text-white transition-all duration-300"
+                >
+                  {showAll ? (
+                    <>
+                      Tampilkan Lebih Sedikit 
+                      <ChevronUp size={18} className="group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  ) : (
+                    <>
+                      Lihat Selengkapnya 
+                      <ChevronDown size={18} className="group-hover:translate-y-1 transition-transform" />
+                    </>
                   )}
-                </div>
-              </motion.button>
-            ))}
-          </div>
+                </button>
+              </motion.div>
+            )}
+          </>
         )}
       </div>
 
-      {/* Lightbox Modal */}
+      {/* Lightbox Modal (Tetap Sama) */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -130,11 +167,11 @@ export default function Certificates({ initialCertificates }: Props) {
               </button>
 
               {/* Certificate image */}
-              <div className="bg-[var(--bg-secondary)] flex items-center justify-center min-h-[300px]">
+              <div className="bg-[var(--bg-secondary)] flex items-center justify-center min-h-[300px] p-6">
                 <img
                   src={selected.image_url}
                   alt={selected.title}
-                  className="max-w-full max-h-[400px] object-contain"
+                  className="max-w-full max-h-[400px] object-contain drop-shadow-md"
                 />
               </div>
 
@@ -153,16 +190,21 @@ export default function Certificates({ initialCertificates }: Props) {
                   )}
                 </div>
 
-                {selected.credential_url && (
+                {/* Kondisi jika credential_url ada */}
+                {selected.credential_url ? (
                   <a
                     href={selected.credential_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--brand-primary)] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--brand-primary)] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                   >
                     <ExternalLink size={14} />
-                    Verifikasi Sertifikat
+                    Lihat Kredensial Resmi
                   </a>
+                ) : (
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-[var(--text-muted)] text-sm font-medium cursor-not-allowed">
+                    Sertifikat Fisik / Internal
+                  </div>
                 )}
               </div>
             </motion.div>

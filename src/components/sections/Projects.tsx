@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Star } from "lucide-react";
-
-// GitHub SVG inline (lucide-react v1+ tidak include GitHub brand icon)
-const GithubIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-  </svg>
-);
+import { Star, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Project = {
@@ -50,11 +43,17 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function Projects({ initialProjects }: Props) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  
+  // 1. Tambahkan state untuk tombol lihat selengkapnya
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const filtered =
     activeFilter === "all"
       ? initialProjects
       : initialProjects.filter((p) => p.category === activeFilter);
+
+  // 2. Potong array yang sudah di-filter menjadi 3 saja jika showAll = false
+  const displayedProjects = showAll ? filtered : filtered.slice(0, 3);
 
   return (
     <section id="projects" className="section-padding bg-[var(--bg-secondary)]">
@@ -81,7 +80,10 @@ export default function Projects({ initialProjects }: Props) {
           {FILTER_TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveFilter(tab.key)}
+              onClick={() => {
+                setActiveFilter(tab.key);
+                setShowAll(false); // 3. Reset tombol saat pindah kategori
+              }}
               className={`
                 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200
                 ${activeFilter === tab.key
@@ -116,7 +118,8 @@ export default function Projects({ initialProjects }: Props) {
                 Tidak ada proyek di kategori ini.
               </motion.div>
             ) : (
-              filtered.map((project, idx) => (
+              // 4. Gunakan displayedProjects di sini
+              displayedProjects.map((project, idx) => (
                 <motion.div
                   key={project.id}
                   layout
@@ -199,7 +202,16 @@ export default function Projects({ initialProjects }: Props) {
                           aria-label="GitHub"
                           className="w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-color-hover)] transition-all"
                         >
-                          <GithubIcon />
+                          <svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  width="16" height="16" 
+  viewBox="0 0 24 24" fill="none" 
+  stroke="currentColor" strokeWidth="2" 
+  strokeLinecap="round" strokeLinejoin="round"
+>
+  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.02c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A4.8 4.8 0 0 0 8 18v4"></path>
+  <path d="M12 18h.01"></path>
+</svg>
                         </a>
                       )}
                       {project.live_url && (
@@ -220,6 +232,33 @@ export default function Projects({ initialProjects }: Props) {
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* 5. Tombol Lihat Selengkapnya (Hanya muncul jika item > 3) */}
+        {filtered.length > 3 && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="mt-12 flex justify-center"
+          >
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="group flex items-center gap-2 px-6 py-2.5 rounded-full border-2 border-[var(--brand-primary)] text-[var(--brand-primary)] font-semibold hover:bg-[var(--brand-primary)] hover:text-white transition-all duration-300"
+            >
+              {showAll ? (
+                <>
+                  Tampilkan Lebih Sedikit 
+                  <ChevronUp size={18} className="group-hover:-translate-y-1 transition-transform" />
+                </>
+              ) : (
+                <>
+                  Lihat Selengkapnya 
+                  <ChevronDown size={18} className="group-hover:translate-y-1 transition-transform" />
+                </>
+              )}
+            </button>
+          </motion.div>
+        )}
+
       </div>
     </section>
   );
